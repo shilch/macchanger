@@ -11,10 +11,11 @@ sudo sh -c "curl https://raw.githubusercontent.com/shilch/macchanger/master/macc
 ## Usage
 Type `sudo macchanger`:
 ```
-Usage: sudo macchanger [option] device
+Usage: sudo macchanger [option] [device]
 Options:
  -r, --random         Generates a random MAC and sets it
  -m, --mac MAC        Set a custom MAC address, e.g. macchanger -m aa:bb:cc:dd:ee:ff en0
+ -p, --permanent      Resets the MAC address to the permanent
  -s, --show           Shows the current MAC address
  -v, --version        Prints version
 ```
@@ -25,6 +26,9 @@ Options:
 ### Set random MAC
 `sudo macchanger -r en0`
 
+### Reset to permanent MAC
+`sudo macchanger -p en0`
+
 ## To do
-- Reset to permanent MAC address
 - Option to set MAC address at startup
+- Add Manufacturer info
