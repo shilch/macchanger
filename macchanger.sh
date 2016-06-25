@@ -90,6 +90,10 @@ currentMac () {
   printf `awk '/ether/ {print $NF}' <<< "$ETHERCURRENT"`
 }
 
+getPermanent (){
+  printf `networksetup -getmacaddress $1 | awk '{print $3}'`
+}
+
 if [[ "$1" == "-v" ]] || [[ "$1" == "--version" ]]
 then
   printf "Version: $VERSION, Copyright $YEAR by $AUTHOR\n"
@@ -101,10 +105,13 @@ then
     exit 1
   fi
 
+  ensureDeviceExists $2
+
   ETHERCURRENT=$(currentMac $2)
 
-  printf "Type of device:         $( getType $2 )"
-  printf "Current MAC address:    $ETHERCURRENT"
+  printf "${BOLD}Type of device:${NORMAL}         $( getType $2 )\n"
+  printf "${BOLD}Permanent MAC address:${NORMAL}  $( getPermanent $2 )\n"
+  printf "${BOLD}Current MAC address:${NORMAL}    $ETHERCURRENT\n"
 
 elif [[ "$1" == "-r" ]] || [[ "$1" == "--random" ]]
 then
@@ -128,8 +135,9 @@ then
     exit 1
   fi
 
-  printf "Old MAC address:    $OLDMAC\n"
-  printf "New MAC address:    $CURRENTMAC\n"
+  printf "${BOLD}Permanent MAC address:${NORMAL} $( getPermanent $2 )\n"
+  printf "${BOLD}Old MAC address:${NORMAL}       $OLDMAC\n"
+  printf "${BOLD}New MAC address:${NORMAL}       $CURRENTMAC\n"
 elif [[ "$1" == "-m" ]] || [[ "$1" == "--mac" ]]
 then
   warnMulticast $2
@@ -140,14 +148,26 @@ then
 
   setMac $3 $2
 
-  printf "Old MAC address:    $OLDMAC\n"
-  printf "New MAC address:    $( currentMac $3 )\n"
+  printf "${BOLD}Permanent MAC address:${NORMAL} $( getPermanent $3 )\n"
+  printf "${BOLD}Old MAC address:${NORMAL}       $OLDMAC\n"
+  printf "${BOLD}New MAC address:${NORMAL}       $( currentMac $3 )\n"
+elif [[ "$1" == "-p" ]] || [[ "$1" == "--permanent" ]]
+then
+  ensureDeviceExists $2
 
+  OLDMAC=$( currentMac $2 )
+
+  setMac $2 $( getPermanent $2 )
+
+  printf "${BOLD}Permanent MAC address:${NORMAL} $( getPermanent $2 )\n"
+  printf "${BOLD}Old MAC address:${NORMAL}       $OLDMAC\n"
+  printf "${BOLD}New MAC address:${NORMAL}       $( currentMac $2 )\n"
 else
-  printf "Usage: sudo macchanger [option] device\n"
+  printf "Usage: sudo macchanger [option] [device]\n"
   printf "Options:\n"
   printf " -r, --random         Generates a random MAC and sets it\n"
   printf " -m, --mac MAC        Set a custom MAC address, e.g. macchanger -m aa:bb:cc:dd:ee:ff en0\n"
+  printf " -p, --permanent      Resets the MAC address to the permanent\n"
   printf " -s, --show           Shows the current MAC address\n"
   printf " -v, --version        Prints version\n"
 fi
