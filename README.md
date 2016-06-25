@@ -25,4 +25,4 @@ Options:
 
 ## To do
 - Reset to permanent MAC address
-- Only restart WIFI service if device / interface is a wifi device
+- Option to set MAC address at startup
