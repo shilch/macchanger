@@ -1,17 +1,20 @@
 # macchanger
-macchanger for Mac OS - Spoof / Fake MAC address
+macchanger for macOS - Spoof / Fake MAC address  
+**NEW:** Updated to support macOS Sonoma 14.4+
 
 ![](macchanger_1.png?raw=true)
 
 ## Installation
 ```sh
-sudo sh -c "curl https://raw.githubusercontent.com/shilch/macchanger/master/macchanger.sh > /usr/local/bin/macchanger && chmod +x /usr/local/bin/macchanger"
+git clone https://github.com/shilch/macchanger
+cd macchanger
+sudo make install
 ```
 
 ## Usage
 Type `sudo macchanger`:
 ```
-Usage: sudo macchanger [option] [device]
+Usage: macchanger [option] [device]
 Options:
  -r, --random         Generates a random MAC and sets it
  -m, --mac MAC        Set a custom MAC address, e.g. macchanger -m aa:bb:cc:dd:ee:ff en0
