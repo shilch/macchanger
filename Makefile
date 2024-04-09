@@ -11,3 +11,7 @@ macchanger: macchanger.c
 .PHONY: install
 install: macchanger
 	@cp ./macchanger /usr/local/bin/macchanger
+
+.PHONY: clean
+clean:
+	@rm ./macchanger
