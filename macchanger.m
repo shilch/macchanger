@@ -20,6 +20,7 @@
 #include <CoreFoundation/CoreFoundation.h>
 #include <IOKit/IOKitLib.h>
 #include <IOKit/network/IONetworkController.h>
+#import <CoreWLAN/CoreWLAN.h>
 
 #define RED "\033[0;31m"
 #define CYAN "\033[0;36m"
@@ -322,22 +323,11 @@ void interface_airport_disassociate(interface_t iface) {
     char if_name[IF_NAMESIZE] = {};
     interface_get_name(iface, if_name);
 
-    int fd = socket(AF_INET, SOCK_DGRAM, 0);
+    CWWiFiClient *client = [[CWWiFiClient alloc] init];
 
-    struct io80211_ioctl {
-        char     ifname[16];
-        uint32_t type;
-        uint32_t value;
-        uint32_t length;
-        void*    data;
-    } ioc;
-    strcpy(ioc.ifname, if_name);
-    ioc.type = 0x16;
-    ioc.value = 0;
-    ioc.length = 0;
-    ioc.data = NULL;
+    CWInterface *interface = [client interfaceWithName:@"en0"];
 
-#define APPLE80211_IOC_CODE_SET _IOW('i', 200, struct io80211_ioctl)
-    ioctl(fd, APPLE80211_IOC_CODE_SET, &ioc);
-#undef APPLE80211_IOC_CODE_SET
+    [interface disassociate];
+
+    [client dealloc];
 }
