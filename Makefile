@@ -3,7 +3,7 @@ AUTHOR="Simon Hilchenbach"
 YEAR="2016-2024"
 
 macchanger: macchanger.m
-	@clang -framework IOKit -framework CoreWLAN -framework CoreFoundation -o $@ $^ \
+	@clang -framework IOKit -framework CoreWLAN -framework CoreFoundation -framework Cocoa -o $@ $^ \
 		-DVERSION='${VERSION}' \
 		-DAUTHOR='${AUTHOR}'   \
 		-DYEAR='${YEAR}'

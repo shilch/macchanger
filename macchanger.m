@@ -325,7 +325,7 @@ void interface_airport_disassociate(interface_t iface) {
 
     CWWiFiClient *client = [[CWWiFiClient alloc] init];
 
-    CWInterface *interface = [client interfaceWithName:@"en0"];
+    CWInterface *interface = [client interfaceWithName:[NSString stringWithUTF8String:if_name]];
 
     [interface disassociate];
 
