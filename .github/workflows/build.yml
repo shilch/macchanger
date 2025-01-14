@@ -17,6 +17,5 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build
-        uses: ./
-        with:
-          build: make
+        run: make
+        shell: bash
