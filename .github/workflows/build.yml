@@ -23,6 +23,6 @@ jobs:
       - name: Archive macchanger binary
         uses: actions/upload-artifact@v4
         with:
-          name: macchanger binary
+          name: macchanger-${{ matrix.os }}
           path: |
             macchanger
