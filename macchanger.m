@@ -255,12 +255,12 @@ const char* ether_to_string(const ether_addr_t* ether) {
 void interface_open(interface_t* iface, const char* name) {
     assert(iface);
 
-    CFMutableDictionaryRef matchingDict = IOBSDNameMatching(kIOMainPortDefault, 0, name);
+    CFMutableDictionaryRef matchingDict = IOBSDNameMatching(kIOMasterPortDefault, 0, name);
     if (matchingDict == NULL) {
         exit(1);
     }
 
-    *iface = IOServiceGetMatchingService(kIOMainPortDefault, matchingDict);
+    *iface = IOServiceGetMatchingService(kIOMasterPortDefault, matchingDict);
 }
 
 void interface_get_name(const interface_t iface, char* name) {
