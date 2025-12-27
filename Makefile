@@ -1,17 +1,22 @@
+CC ?= clang
+CFLAGS := -framework IOKit -framework CoreWLAN -framework CoreFoundation -framework Cocoa -mmacosx-version-min=10.12
+prefix ?= /usr/local
+
 VERSION="0.2.0"
 AUTHOR="Simon Hilchenbach"
 YEAR="2016-2024"
 
 macchanger: macchanger.m
-	@clang -framework IOKit -framework CoreWLAN -framework CoreFoundation -framework Cocoa -o $@ $^ \
+	$(CC) -o $@ $^ $(CFLAGS) \
 		-DVERSION='${VERSION}' \
 		-DAUTHOR='${AUTHOR}'   \
 		-DYEAR='${YEAR}'
 
 .PHONY: install
 install: macchanger
-	@cp ./macchanger /usr/local/bin/macchanger
+	mkdir -p $(prefix)/bin
+	cp ./macchanger $(prefix)/bin/macchanger
 
 .PHONY: clean
 clean:
-	@rm ./macchanger
+	rm ./macchanger
