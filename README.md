@@ -35,3 +35,6 @@ Options:
 ## To do
 - Option to set MAC address at startup
 - Add Manufacturer info
+
+## License
+macchanger is licensed under GPLv2.
