@@ -5,6 +5,12 @@ macchanger for macOS - Spoof / Fake MAC address
 ![](macchanger_1.png?raw=true)
 
 ## Installation
+The easiest way to install `macchanger` is via [Homebrew](https://brew.sh/).
+```
+brew install macchanger
+```
+
+Alternatively, you can compile `macchanger` yourself:
 ```sh
 git clone https://github.com/shilch/macchanger
 cd macchanger
