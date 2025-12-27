@@ -34,6 +34,8 @@
 #define INFO    BOLD CYAN "INFO:" RS NORMAL "    "
 #define WARNING BOLD YELLOW "WARNING:" RS NORMAL " "
 
+#define PERROR() fprintf(stderr, ERROR "%s: %s\n", __FUNCTION__, strerror(errno));
+
 typedef io_service_t interface_t;
 void interface_open(interface_t* iface, const char* name);
 void interface_get_name(interface_t iface, char* name);
@@ -68,7 +70,7 @@ int main(int argc, char** argv) {
     int ch;
     while ((ch = getopt_long(argc, argv, "rm:psv", long_options, NULL)) != -1) {
         if(selected_option != 0) {
-            fputs(ERROR "Only one option is allowed at a time", stderr);
+            fputs(ERROR "Only one option is allowed at a time\n", stderr);
             return 1;
         }
         selected_option = ch;
@@ -104,7 +106,7 @@ int main(int argc, char** argv) {
 
     const char* if_name = argv[0];
     if(strlen(if_name) > IFNAMSIZ) {
-        fputs(ERROR "Interface name too long", stderr);
+        fputs(ERROR "Interface name too long\n", stderr);
         return 1;
     }
 
@@ -195,7 +197,7 @@ void change_mac(const interface_t iface, const ether_addr_t* new_ether) {
 void random_ether(ether_addr_t* ether) {
     int fd = open("/dev/urandom", O_RDONLY);
     if(fd == -1) {
-        perror(__FUNCTION__);
+        PERROR();
         exit(errno);
     }
 
@@ -204,7 +206,7 @@ void random_ether(ether_addr_t* ether) {
     while(to_read > 0) {
         ssize_t n = read(fd, ether->octet + (ETHER_ADDR_LEN - to_read), to_read);
         if(n == -1) {
-            perror(__FUNCTION__);
+            PERROR();
             exit(errno);
         }
         to_read -= n;
@@ -267,18 +269,21 @@ void interface_get_name(const interface_t iface, char* name) {
     IORegistryEntryGetName(iface, name);
 }
 
-#define if_request(iface, code, req)                 \
-    {                                                \
-        char if_name[IF_NAMESIZE] = {};              \
-        interface_get_name(iface, if_name);          \
-        int fd = socket(AF_INET, SOCK_DGRAM, 0);     \
-        strncpy(req.ifr_name, if_name, IF_NAMESIZE); \
-        int res = ioctl(fd, code, &req);             \
-        if(res == -1) {                              \
-            perror(__FUNCTION__);                    \
-            exit(errno);                             \
-        }                                            \
-        close(fd);                                   \
+#define if_request(iface, code, req)                                 \
+    {                                                               \
+        char if_name[IF_NAMESIZE] = {};                             \
+        interface_get_name(iface, if_name);                         \
+        int fd = socket(AF_INET, SOCK_DGRAM, 0);                    \
+        strncpy(req.ifr_name, if_name, IF_NAMESIZE);                \
+        int res = ioctl(fd, code, &req);                            \
+        if(res == -1) {                                             \
+            PERROR();                                               \
+            if(errno == EPERM && geteuid() != 0) {                  \
+                fputs("Please run macchanger as root\n", stderr);   \
+            }                                                       \
+            exit(errno);                                            \
+        }                                                           \
+        close(fd);                                                  \
     }
 
 void interface_get_ether(const interface_t iface, ether_addr_t* ether) {
