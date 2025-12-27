@@ -144,11 +144,16 @@ void print_usage() {
     puts(" -p, --permanent      Resets the MAC address to the permanent");
     puts(" -s, --show           Shows the current MAC address");
     puts(" -v, --version        Prints version");
+
+#ifdef HOMEPAGE
+    puts("\nHomepage: " HOMEPAGE);
+#endif
 }
 
 void print_version() {
-#if defined(VERSION) && defined(YEAR) && defined(AUTHOR)
-    puts("Version: " VERSION ", Copyright " YEAR " by " AUTHOR);
+#if defined(VERSION) && defined(YEAR) && defined(AUTHOR) && defined(HOMEPAGE)
+    puts("Version:  " VERSION ", Copyright " YEAR " by " AUTHOR);
+    puts("Homepage: " HOMEPAGE);
 #else
     puts("Built without version information");
 #endif
