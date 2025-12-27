@@ -4,7 +4,7 @@ prefix ?= /usr/local
 
 VERSION="0.2.0"
 AUTHOR="Simon Hilchenbach"
-YEAR="2016-2024"
+YEAR="2016-2026"
 
 macchanger: macchanger.m
 	$(CC) -o $@ $^ $(CFLAGS) \
